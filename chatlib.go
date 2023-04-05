@@ -24,7 +24,7 @@ func gptComplete(client *openai.Client, msg string) string {
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleUser,
-					Content: "Hello!",
+					Content: msg,
 				},
 			},
 		},
