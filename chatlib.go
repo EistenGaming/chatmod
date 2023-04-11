@@ -3,7 +3,9 @@ package main
 import (
 	"bytes"
 	"context"
+	"crypto/rand"
 	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"image/png"
 	"os"
@@ -88,7 +90,9 @@ func dalleGenerate(client *openai.Client, msg string) {
 		return
 	}
 
-	file, err := os.Create("example.png")
+	var hexVal, _ = randomHex(7)
+	var fileName = "image_" + hexVal + ".png"
+	file, err := os.Create(fileName)
 	if err != nil {
 		fmt.Printf("File creation error: %v\n", err)
 		return
@@ -100,6 +104,15 @@ func dalleGenerate(client *openai.Client, msg string) {
 		return
 	}
 
-	fmt.Println("The image was saved as example.png")
+	fmt.Println("The image was saved as " + fileName)
 
+}
+
+/* Helper function to create unique hex IDs */
+func randomHex(n int) (string, error) {
+	bytes := make([]byte, n)
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(bytes), nil
 }
