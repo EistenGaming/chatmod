@@ -116,3 +116,12 @@ func randomHex(n int) (string, error) {
 	}
 	return hex.EncodeToString(bytes), nil
 }
+
+/* Helper function to keep track of the command history for the current session */
+func history(userInputHistory []string) {
+	fmt.Print("\n")
+	for _, element := range userInputHistory {
+		fmt.Println("\t" + element)
+	}
+	fmt.Print("\n")
+}

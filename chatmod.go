@@ -12,6 +12,7 @@ func main() {
 	client := gptInit()
 	/* Initialize the userInput variable. This is what the user enters on the keyboard */
 	var userInput string
+	userInputHistory := []string{}
 
 	/* A string listing all valid commands */
 	var helpString = "\n" +
@@ -31,18 +32,23 @@ func main() {
 		"\t/dalleGenerate [Prompt] \tGenerate an image using DALL-E. The image is saved as 'image_[Unique ID].png' in the current directory.\n" +
 		"\t/exit \t\t\t\tTerminate the app.\n" +
 		"\t/help \t\t\t\tShow this help text.\n" +
+		"\t/history \t\t\tShow a list of commands entered during the current session.\n" +
 		"\t/quit \t\t\t\t(see /exit)\n"
 
+	/* Show the welcome text */
+	fmt.Print("\nWelcome to chatmod. Type '/help' for available commands.\n")
 	/* Loop until the command '/quit' or '/exit' is typed */
 	for {
-
-		/* Show the welcome text */
-		fmt.Print("\nWelcome to chatmod. Type '/help' for available commands.\n")
 		/* Show the prompt */
 		fmt.Print("> ")
+
+		/* Read the user input */
 		inputReader := bufio.NewReader(os.Stdin)
 		userInput, _ = inputReader.ReadString('\n')
 		userInput = strings.TrimSuffix(userInput, "\n")
+
+		/* Add the last user prompt to the history */
+		userInputHistory = append(userInputHistory, userInput)
 
 		/* Extract the command string */
 		command := ""
@@ -66,10 +72,12 @@ func main() {
 			dalleGenerate(client, userInput)
 		case "/help":
 			fmt.Println(helpString)
+		case "/history":
+			history(userInputHistory)
 		case "/complete": /* /complete needs to be last as it is the default behavior, which 'falls through' to the default switch statement */
 			fallthrough
 		default:
-			fmt.Println("The question was: " + userInput)
+			fmt.Println("The prompt was: " + userInput)
 			fmt.Println(gptComplete(client, userInput))
 		}
 
