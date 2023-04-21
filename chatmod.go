@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 )
@@ -78,7 +79,11 @@ func main() {
 			fallthrough
 		default:
 			fmt.Println("The prompt was: " + userInput)
-			fmt.Println(gptComplete(client, userInput))
+			response, err := gptComplete(client, userInput)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println(response)
 		}
 
 	}

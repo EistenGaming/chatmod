@@ -20,7 +20,7 @@ func gptInit() *openai.Client {
 }
 
 // Ask GPT something and return the reply to the user
-func gptComplete(client *openai.Client, msg string) string {
+func gptComplete(client *openai.Client, msg string) (string, error) {
 
 	resp, err := client.CreateChatCompletion(
 		context.Background(),
@@ -36,11 +36,10 @@ func gptComplete(client *openai.Client, msg string) string {
 	)
 
 	if err != nil {
-		fmt.Printf("ChatCompletion error: %v\n", err)
-		return "[GPT Error]"
+		return "", err
 	}
 
-	return resp.Choices[0].Message.Content
+	return resp.Choices[0].Message.Content, nil
 }
 
 // ASk DALL-E to generate an image from a prompt
